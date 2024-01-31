@@ -1,0 +1,95 @@
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# vi ssd-monitor-daemonset.yaml
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl apply -f ssd-monitor-daemonset.yaml
+daemonset.apps/ssd-monitor created
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl get all
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   2m39s
+
+NAME                         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/ssd-monitor   0         0         0       0            0           disk=ssd        8s
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl get nodes --show-labels
+NAME                                               STATUS   ROLES    AGE   VERSION   LABELS
+ip-172-31-32-220.ap-southeast-1.compute.internal   Ready    master   12d   v1.18.5   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-172-31-32-220.ap-southeast-1.compute.internal,kubernetes.io/os=linux,node-role.kubernetes.io/master=
+ip-172-31-38-93.ap-southeast-1.compute.internal    Ready    <none>   12d   v1.18.5   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-172-31-38-93.ap-southeast-1.compute.internal,kubernetes.io/os=linux
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl label nodes ip-172-31-38-93.ap-southeast-1.compute.internal disk=ssd
+node/ip-172-31-38-93.ap-southeast-1.compute.internal labeled
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl get nodes --show-labels
+NAME                                               STATUS   ROLES    AGE   VERSION   LABELS
+ip-172-31-32-220.ap-southeast-1.compute.internal   Ready    master   12d   v1.18.5   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-172-31-32-220.ap-southeast-1.compute.internal,kubernetes.io/os=linux,node-role.kubernetes.io/master=
+ip-172-31-38-93.ap-southeast-1.compute.internal    Ready    <none>   12d   v1.18.5   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,disk=ssd,kubernetes.io/arch=amd64,kubernetes.io/hostname=ip-172-31-38-93.ap-southeast-1.compute.internal,kubernetes.io/os=linux
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl get all
+NAME                    READY   STATUS    RESTARTS   AGE
+pod/ssd-monitor-78fhl   1/1     Running   0          12s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   4m46s
+
+NAME                         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/ssd-monitor   1         1         1       1            1           disk=ssd        2m15s
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl get ds
+NAME          DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+ssd-monitor   1         1         1       1            1           disk=ssd        2m22s
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl desc ds ssd-monitor
+Error: unknown command "desc" for "kubectl"
+
+Did you mean this?
+        describe
+
+Run 'kubectl --help' for usage.
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]# kubectl describe ds ssd-monitor
+Name:           ssd-monitor
+Selector:       app=ssd-monitor
+Node-Selector:  disk=ssd
+Labels:         <none>
+Annotations:    deprecated.daemonset.template.generation: 1
+Desired Number of Nodes Scheduled: 1
+Current Number of Nodes Scheduled: 1
+Number of Nodes Scheduled with Up-to-date Pods: 1
+Number of Nodes Scheduled with Available Pods: 1
+Number of Nodes Misscheduled: 0
+Pods Status:  1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  app=ssd-monitor
+  Containers:
+   main:
+    Image:        luksa/ssd-monitor
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Events:
+  Type    Reason            Age   From                  Message
+  ----    ------            ----  ----                  -------
+  Normal  SuccessfulCreate  39s   daemonset-controller  Created pod: ssd-monitor-78fhl
+[root@ip-172-31-38-93 04-controllers]#
+[root@ip-172-31-38-93 04-controllers]#
