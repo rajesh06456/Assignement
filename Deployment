@@ -1,0 +1,131 @@
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl apply -f kubia-deployment-and-service-v1-edit.yaml
+deployment.apps/kubia created
+service/kubia created
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl get all
+NAME                         READY   STATUS              RESTARTS   AGE
+pod/kubia-59d857b444-pwl99   0/1     ContainerCreating   0          5s
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP   2m9s
+service/kubia        ClusterIP   10.96.167.239   <none>        80/TCP    5s
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/kubia   0/1     1            0           5s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/kubia-59d857b444   1         1         0       5s
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl get deployements
+error: the server doesn't have a resource type "deployements"
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl get deployement
+error: the server doesn't have a resource type "deployement"
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl get deploy
+NAME    READY   UP-TO-DATE   AVAILABLE   AGE
+kubia   1/1     1            1           56s
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl describe deployement kubia
+error: the server doesn't have a resource type "deployement"
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl describe deployment kubia
+Name:                   kubia
+Namespace:              default
+CreationTimestamp:      Wed, 31 Jan 2024 09:01:16 +0000
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=kubia
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=kubia
+  Containers:
+   nodejs:
+    Image:        luksa/kubia:v1
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   kubia-59d857b444 (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  84s   deployment-controller  Scaled up replica set kubia-59d857b444 to 1
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl patch deployment kubia -p '{"spec": {"minReadySeconds": 15}}'
+deployment.apps/kubia patched
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl describe deployement kubia
+error: the server doesn't have a resource type "deployement"
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl describe deployment kubia
+Name:                   kubia
+Namespace:              default
+CreationTimestamp:      Wed, 31 Jan 2024 09:01:16 +0000
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=kubia
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        15
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=kubia
+  Containers:
+   nodejs:
+    Image:        luksa/kubia:v1
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   kubia-59d857b444 (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  3m26s  deployment-controller  Scaled up replica set kubia-59d857b444 to 1
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl get deployments
+NAME    READY   UP-TO-DATE   AVAILABLE   AGE
+kubia   1/1     1            1           3m34s
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]# kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+kubia-59d857b444-pwl99   1/1     Running   0          3m41s
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
+[root@ip-172-31-38-93 09-deployments]#
