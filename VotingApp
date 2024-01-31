@@ -1,0 +1,223 @@
+######Master
+[root@ip-172-31-32-220 ~]#
+[root@ip-172-31-32-220 ~]# cd /root
+[root@ip-172-31-32-220 ~]# git clone https://github.com/ashishrpandey/example-voting-app
+Cloning into 'example-voting-app'...
+remote: Enumerating objects: 494, done.
+remote: Total 494 (delta 0), reused 0 (delta 0), pack-reused 494
+Receiving objects: 100% (494/494), 236.18 KiB | 12.43 MiB/s, done.
+Resolving deltas: 100% (179/179), done.
+[root@ip-172-31-32-220 ~]#
+[root@ip-172-31-32-220 ~]#
+[root@ip-172-31-32-220 ~]#
+[root@ip-172-31-32-220 ~]# cd /root/example-voting-app/k8s-specifications
+[root@ip-172-31-32-220 k8s-specifications]#
+[root@ip-172-31-32-220 k8s-specifications]#
+[root@ip-172-31-32-220 k8s-specifications]# ls -lrth
+total 36K
+-rw-r--r-- 1 root root 292 Jan 31 07:52 worker-deployment.yaml
+-rw-r--r-- 1 root root 192 Jan 31 07:52 vote-service.yaml
+-rw-r--r-- 1 root root 289 Jan 31 07:52 vote-deployment.yaml
+-rw-r--r-- 1 root root 195 Jan 31 07:52 result-service.yaml
+-rw-r--r-- 1 root root 299 Jan 31 07:52 result-deployment.yaml
+-rw-r--r-- 1 root root 152 Jan 31 07:52 redis-service.yaml
+-rw-r--r-- 1 root root 402 Jan 31 07:52 redis-deployment.yaml
+-rw-r--r-- 1 root root 146 Jan 31 07:52 db-service.yaml
+-rw-r--r-- 1 root root 401 Jan 31 07:52 db-deployment.yaml
+[root@ip-172-31-32-220 k8s-specifications]#
+[root@ip-172-31-32-220 k8s-specifications]#
+[root@ip-172-31-32-220 k8s-specifications]# kubectl apply -f .
+deployment.apps/db unchanged
+service/db unchanged
+deployment.apps/redis unchanged
+service/redis unchanged
+deployment.apps/result unchanged
+service/result unchanged
+deployment.apps/vote unchanged
+service/vote unchanged
+deployment.apps/worker unchanged
+[root@ip-172-31-32-220 k8s-specifications]# kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-8tml6        1/1     Running   0          6d2h
+redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+result-5d57b59f4b-2hcsh   1/1     Running   0          6d2h
+vote-94849dc97-mqrd8      1/1     Running   0          6d2h
+worker-dd46d7584-x62jb    1/1     Running   0          6d2h
+[root@ip-172-31-32-220 k8s-specifications]#
+[root@ip-172-31-32-220 k8s-specifications]#
+[root@ip-172-31-32-220 k8s-specifications]# kubectl get all
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/db-b54cd94f4-8tml6        1/1     Running   0          6d2h
+pod/redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+pod/result-5d57b59f4b-2hcsh   1/1     Running   0          6d2h
+pod/vote-94849dc97-mqrd8      1/1     Running   0          6d2h
+pod/worker-dd46d7584-x62jb    1/1     Running   0          6d2h
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.110.43.27     <none>        5432/TCP         6d2h
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          6d2h
+service/redis        ClusterIP   10.103.67.21     <none>        6379/TCP         6d2h
+service/result       NodePort    10.103.138.230   <none>        5001:31001/TCP   6d2h
+service/vote         NodePort    10.106.202.102   <none>        5000:31000/TCP   6d2h
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           6d2h
+deployment.apps/redis    1/1     1            1           6d2h
+deployment.apps/result   1/1     1            1           6d2h
+deployment.apps/vote     1/1     1            1           6d2h
+deployment.apps/worker   1/1     1            1           6d2h
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       6d2h
+replicaset.apps/redis-868d64d78     1         1         1       6d2h
+replicaset.apps/result-5d57b59f4b   1         1         1       6d2h
+replicaset.apps/vote-94849dc97      1         1         1       6d2h
+replicaset.apps/worker-dd46d7584    1         1         1       6d2h
+[root@ip-172-31-32-220 k8s-specifications]#
+
+
+####Worker
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# cd /root/
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# git clone https://github.com/ashishrpandey/example-voting-app
+fatal: destination path 'example-voting-app' already exists and is not an empty directory.
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# cd /root/example-voting-app/k8s-specifications
+[root@ip-172-31-38-93 k8s-specifications]#
+[root@ip-172-31-38-93 k8s-specifications]#
+[root@ip-172-31-38-93 k8s-specifications]# ls -lrth
+total 36K
+-rw-r--r-- 1 root root 292 Jan 25 05:31 worker-deployment.yaml
+-rw-r--r-- 1 root root 192 Jan 25 05:31 vote-service.yaml
+-rw-r--r-- 1 root root 289 Jan 25 05:31 vote-deployment.yaml
+-rw-r--r-- 1 root root 195 Jan 25 05:31 result-service.yaml
+-rw-r--r-- 1 root root 299 Jan 25 05:31 result-deployment.yaml
+-rw-r--r-- 1 root root 152 Jan 25 05:31 redis-service.yaml
+-rw-r--r-- 1 root root 402 Jan 25 05:31 redis-deployment.yaml
+-rw-r--r-- 1 root root 146 Jan 25 05:31 db-service.yaml
+-rw-r--r-- 1 root root 401 Jan 25 05:31 db-deployment.yaml
+[root@ip-172-31-38-93 k8s-specifications]#
+[root@ip-172-31-38-93 k8s-specifications]#
+
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl get all
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/db-b54cd94f4-8tml6        1/1     Running   0          6d2h
+pod/redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+pod/result-5d57b59f4b-2hcsh   1/1     Running   0          6d2h
+pod/vote-94849dc97-mqrd8      1/1     Running   0          6d2h
+pod/worker-dd46d7584-x62jb    1/1     Running   0          6d2h
+
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/db           ClusterIP   10.110.43.27     <none>        5432/TCP         6d2h
+service/kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP          6d2h
+service/redis        ClusterIP   10.103.67.21     <none>        6379/TCP         6d2h
+service/result       NodePort    10.103.138.230   <none>        5001:31001/TCP   6d2h
+service/vote         NodePort    10.106.202.102   <none>        5000:31000/TCP   6d2h
+
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/db       1/1     1            1           6d2h
+deployment.apps/redis    1/1     1            1           6d2h
+deployment.apps/result   1/1     1            1           6d2h
+deployment.apps/vote     1/1     1            1           6d2h
+deployment.apps/worker   1/1     1            1           6d2h
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/db-b54cd94f4        1         1         1       6d2h
+replicaset.apps/redis-868d64d78     1         1         1       6d2h
+replicaset.apps/result-5d57b59f4b   1         1         1       6d2h
+replicaset.apps/vote-94849dc97      1         1         1       6d2h
+replicaset.apps/worker-dd46d7584    1         1         1       6d2h
+[root@ip-172-31-38-93 ~]#
+
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-8tml6        1/1     Running   0          6d2h
+redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+result-5d57b59f4b-2hcsh   1/1     Running   0          6d2h
+vote-94849dc97-mqrd8      1/1     Running   0          6d2h
+worker-dd46d7584-x62jb    1/1     Running   0          6d2h
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl delete vote-94849dc97-mqrd8
+error: the server doesn't have a resource type "vote-94849dc97-mqrd8"
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl delete pods vote-94849dc97-mqrd8
+pod "vote-94849dc97-mqrd8" deleted
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl delete pods worker-dd46d7584-x62jb
+pod "worker-dd46d7584-x62jb" deleted
+
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl delete pods db-b54cd94f4-8tml6
+pod "db-b54cd94f4-8tml6" deleted
+
+
+
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-tdplp        1/1     Running   0          49s
+redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+result-5d57b59f4b-2hcsh   1/1     Running   1          6d2h
+vote-94849dc97-wfmqw      1/1     Running   0          83s
+worker-dd46d7584-2fgmx    1/1     Running   1          64s
+[root@ip-172-31-38-93 ~]#
+
+Answer :-
+Pods recreated on the deletion of the pods due to being the part of deployement set.
+
+[root@ip-172-31-38-93 ~]# kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-rxbcw        1/1     Running   0          36s
+redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+result-5d57b59f4b-2hcsh   0/1     Error     1          6d2h
+vote-94849dc97-wfmqw      1/1     Running   0          4m19s
+worker-dd46d7584-2fgmx    0/1     Error     1          4m
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-rxbcw        1/1     Running   0          40s
+redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+result-5d57b59f4b-2hcsh   0/1     Error     1          6d2h
+vote-94849dc97-wfmqw      1/1     Running   0          4m23s
+worker-dd46d7584-2fgmx    0/1     Error     1          4m4s
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-rxbcw        1/1     Running   0          42s
+redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+result-5d57b59f4b-2hcsh   0/1     Error     1          6d2h
+vote-94849dc97-wfmqw      1/1     Running   0          4m25s
+worker-dd46d7584-2fgmx    0/1     Error     1          4m6s
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl get pods
+NAME                      READY   STATUS             RESTARTS   AGE
+db-b54cd94f4-rxbcw        1/1     Running            0          46s
+redis-868d64d78-vq9fw     1/1     Running            0          6d2h
+result-5d57b59f4b-2hcsh   0/1     CrashLoopBackOff   1          6d2h
+vote-94849dc97-wfmqw      1/1     Running            0          4m29s
+worker-dd46d7584-2fgmx    1/1     Running            2          4m10s
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]# kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-rxbcw        1/1     Running   0          52s
+redis-868d64d78-vq9fw     1/1     Running   0          6d2h
+result-5d57b59f4b-2hcsh   1/1     Running   2          6d2h
+vote-94849dc97-wfmqw      1/1     Running   0          4m35s
+worker-dd46d7584-2fgmx    1/1     Running   2          4m16s
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+[root@ip-172-31-38-93 ~]#
+
+Answer on deletion od db pod the worker & result pod went into error & than restarted.
+
