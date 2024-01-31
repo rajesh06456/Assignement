@@ -1,0 +1,149 @@
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# kubectl apply -f kubia-replicaset.yaml
+replicaset.apps/kubia created
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# kubectl get all
+NAME              READY   STATUS              RESTARTS   AGE
+pod/kubia-64dtp   1/1     Running             0          7s
+pod/kubia-kmkpn   0/1     ContainerCreating   0          7s
+pod/kubia-zqnw6   1/1     Running             0          7s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   4m6s
+
+NAME                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/kubia   3         3         2       7s
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# kubectl get pod -o wide
+NAME          READY   STATUS    RESTARTS   AGE   IP              NODE                                              NOMINATED NODE   READINESS GATES
+kubia-64dtp   1/1     Running   0          20s   192.168.37.80   ip-172-31-38-93.ap-southeast-1.compute.internal   <none>           <none>
+kubia-kmkpn   1/1     Running   0          20s   192.168.37.82   ip-172-31-38-93.ap-southeast-1.compute.internal   <none>           <none>
+kubia-zqnw6   1/1     Running   0          20s   192.168.37.81   ip-172-31-38-93.ap-southeast-1.compute.internal   <none>           <none>
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# curl 192.168.37.80:8080
+You've hit kubia-64dtp
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# curl 13.229.87.219:8080
+curl: (7) Failed to connect to 13.229.87.219 port 8080 after 0 ms: Couldn't connect to server
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# ping 13.229.87.219
+PING 13.229.87.219 (13.229.87.219) 56(84) bytes of data.
+64 bytes from 13.229.87.219: icmp_seq=1 ttl=254 time=0.443 ms
+^C
+--- 13.229.87.219 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.443/0.443/0.443/0.000 ms
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# cat kubia-svc-nodeport
+kubia-svc-nodeport-onlylocal.yaml  kubia-svc-nodeport.yaml
+[root@ip-172-31-38-93 05-services]# cat kubia-svc-nodeport.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30123
+  selector:
+    app: kubia
+
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# vi kubia-svc-nodeport.yaml
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# cat kubia-svc-nodeport.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 8000
+  selector:
+    app: kubia
+
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# kubectl apply -f kubia-svc-nodeport.yaml
+The Service "kubia-nodeport" is invalid: spec.ports[0].nodePort: Invalid value: 8000: provided port is not in the valid range. The range of valid ports is 30000-32767
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# vi kubia-svc-nodeport.yaml
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# cat kubia-svc-nodeport.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia-nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30123
+  selector:
+    app: kubia
+
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# kubectl apply -f kubia-svc-nodeport.yaml
+service/kubia-nodeport created
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# kubectl get all
+NAME              READY   STATUS    RESTARTS   AGE
+pod/kubia-64dtp   1/1     Running   0          3m39s
+pod/kubia-kmkpn   1/1     Running   0          3m39s
+pod/kubia-zqnw6   1/1     Running   0          3m39s
+
+NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP        7m38s
+service/kubia-nodeport   NodePort    10.99.227.240   <none>        80:30123/TCP   5s
+
+NAME                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/kubia   3         3         3       3m39s
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# curl 13.229.87.219:8080
+curl: (7) Failed to connect to 13.229.87.219 port 8080 after 0 ms: Couldn't connect to server
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# curl 13.229.87.219:30123
+You've hit kubia-64dtp
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]# kubectl get ep
+NAME             ENDPOINTS                                                  AGE
+kubernetes       172.31.32.220:6443                                         8m10s
+kubia-nodeport   192.168.37.80:8080,192.168.37.81:8080,192.168.37.82:8080   37s
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
+[root@ip-172-31-38-93 05-services]#
